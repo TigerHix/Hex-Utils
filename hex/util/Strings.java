@@ -79,7 +79,7 @@ public final class Strings {
     }
 
     public static String stripFormat(String string) {
-        return ChatColor.translateAlternateColorCodes('&', string);
+        return ChatColor.stripColor(string);
     }
 
     public static String toMMSS(int seconds) {
