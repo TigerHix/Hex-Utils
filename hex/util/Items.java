@@ -95,7 +95,12 @@ public final class Items {
             return this;
         }
 
-        public ItemStackBuilder changeAmount(int change) {
+        public ItemStackBuilder addAmount(int change) {
+            itemStack.setAmount(itemStack.getAmount() + change);
+            return this;
+        }
+        
+        public ItemStackBuilder subtractAmount(int change) {
             itemStack.setAmount(itemStack.getAmount() + change);
             return this;
         }
@@ -135,16 +140,15 @@ public final class Items {
             return this;
         }
 
-        public ItemStackBuilder addBlankLore() {
-            addLore(" ");
+        public ItemStackBuilder removeLore() {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            List<String> original = itemMeta.getLore();
+            if (original != null) itemMeta.setLore(null);
+            itemStack.setItemMeta(itemMeta);
             return this;
         }
 
-        public ItemStackBuilder addLineLore() {
-            return addLineLore(20);
-        }
-
-        public ItemStackBuilder addLineLore(int length) {
+        public ItemStackBuilder addLines(int length) {
             addLore("&8&m&l" + Strings.repeat("-", length));
             return this;
         }
@@ -159,12 +163,9 @@ public final class Items {
             return this;
         }
 
-        public ItemStackBuilder addLore(List<String> lore) {
+        public ItemStackBuilder setLore(List<String> lore) {
             ItemMeta itemMeta = itemStack.getItemMeta();
-            List<String> original = itemMeta.getLore();
-            if (original == null) original = new ArrayList<>();
-            original.addAll(Strings.format(lore));
-            itemMeta.setLore(original);
+            itemMeta.setLore(lore);
             itemStack.setItemMeta(itemMeta);
             return this;
         }
@@ -172,13 +173,6 @@ public final class Items {
         public ItemStackBuilder setLore(String... lore) {
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setLore(Strings.format(Lists.newArrayList(lore)));
-            itemStack.setItemMeta(itemMeta);
-            return this;
-        }
-
-        public ItemStackBuilder setLore(List<String> lore) {
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setLore(Strings.format(lore));
             itemStack.setItemMeta(itemMeta);
             return this;
         }
