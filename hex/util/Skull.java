@@ -89,13 +89,25 @@ public enum Skull {
      * @param name player's name
      * @return itemstack
      */
-    public static ItemStack getPlayerSkull(String name) {
-        ItemStack itemStack = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-        meta.setOwner(name);
-        itemStack.setItemMeta(meta);
-        return itemStack;
-    }
+    public ItemStack getPlayerHead(String player)
+	  {
+	    try
+	    {
+	      itemStack = Reflections.getMinecraftClass("ItemStack");
+	      craftItemStack = Reflections.getCraftBukkitClass("inventory.CraftItemStack");
+	      nbtCompound = Reflections.getMinecraftClass("NBTTagCompound");
+	      Object sHead = Reflections.getMethod(craftItemStack, "asNMSCopy", new Class[] { ItemStack.class }).invoke(null, new Object[] { new ItemStack(Material.SKULL_ITEM, 1, (short) 3) });
+	      Object tag = Reflections.newInstance(nbtCompound);
+	      Reflections.getMethod(nbtCompound, "setString", new Class[] { String.class, String.class }).invoke(tag, new Object[] { "SkullOwner", player });
+	      Reflections.getMethod(itemStack, "setTag", new Class[] { nbtCompound }).invoke(sHead, new Object[] { tag });
+	      return (ItemStack)Reflections.getMethod(craftItemStack, "asBukkitCopy", new Class[] { itemStack }).invoke(null, new Object[] { sHead });
+	    }
+	    catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException|NoSuchMethodException|SecurityException|InstantiationException|ClassNotFoundException e)
+	    {
+	      e.printStackTrace();
+	    }
+	    return null;
+	  }
 
     /**
      * Return the skull's id.
